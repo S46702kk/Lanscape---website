@@ -4,9 +4,360 @@
   <meta charset="UTF-8" />
   <title>GreenLine Landscaping</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --green: #2e7d32;
+      --green-light: #edf7ee;
+      --dark: #1f2933;
+      --gray: #6b7280;
+      --white: #ffffff;
+      --accent: #f8b400;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      color: #1f2933;
+      background: #f4f5f7;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .container { width: min(1120px, 100%); margin: 0 auto; padding: 0 1.25rem; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 700; font-size: 1.15rem; color: var(--green); }
+    .nav-links { display: flex; gap: 1rem; }
+    .nav-links a { text-decoration: none; color: #1f2933; font-weight: 500; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--green); }
+
+    .hero { background: linear-gradient(120deg, #e9f5ec 0%, #fff 100%); padding: 4rem 0 3rem; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.2rem, 3vw, 2.8rem); margin-bottom: 1rem; color: #1f2933; }
+    .hero p { color: #4b5563; margin-bottom: 1.5rem; }
+    .btn { display: inline-block; background: var(--green); color: #fff; padding: 0.65rem 1.4rem; border-radius: 0.4rem; text-decoration: none; font-weight: 600; }
+    .btn-outline { background: transparent; border: 1px solid var(--green); color: var(--green); margin-left: 0.5rem; }
+    .hero-card { background: #fff; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
+    .hero-card h2 { font-size: 1.1rem; margin-bottom: 0.7rem; }
+    .hero-card ul { list-style: none; }
+    .hero-card li { display: flex; gap: 0.45rem; margin-bottom: 0.5rem; color: #4b5563; }
+    .badge { background: rgba(46,125,50,0.1); padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 500; margin-bottom: 0.5rem; display: inline-block; }
+
+    section { padding: 3.5rem 0; background: #f4f5f7; }
+    .section-title { margin-bottom: 1.8rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .section-title h2 { font-size: 1.6rem; }
+    .services-grid, .seasons-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.5rem;
+    }
+    .card { background: #fff; border-radius: 0.8rem; padding: 1.1rem 1.1rem 1rem; box-shadow: 0 14px 28px rgba(0,0,0,0.03); }
+    .card h3 { font-size: 1.03rem; margin-bottom: 0.4rem; }
+    .card p { color: #6b7280; font-size: 0.85rem; }
+    .tag { display: inline-block; background: #ecfdf3; color: #166534; font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 999px; margin-bottom: 0.5rem; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+    .gallery-item { background: #dde4da; border-radius: 0.7rem; min-height: 130px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #1f2933; }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    form { background: #fff; padding: 1.1rem 1.1rem 1.3rem; border-radius: 0.8rem; box-shadow: 0 10px 28px rgba(0,0,0,0.03); }
+    form label { display: block; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.8rem; }
+    form input, form textarea { width: 100%; padding: 0.5rem 0.6rem; border: 1px solid rgba(0,0,0,0.1); border-radius: 0.5rem; margin-bottom: 0.8rem; font-size: 0.8rem; }
+    .calendar-box { background: #fff; border-radius: 0.8rem; padding: 0.9rem; box-shadow: 0 10px 28px rgba(0,0,0,0.03); min-height: 300px; }
+    .calendar-box iframe { width: 100%; border: none; height: 300px; border-radius: 0.6rem; }
+
+    footer { text-align: center; padding: 2rem 0; font-size: 0.8rem; color: #6b7280; background: #fff; margin-top: 2rem; }
+
+    .chatbot-toggle {
+      position: fixed; right: 1.4rem; bottom: 1.4rem; background: var(--green); color: #fff;
+      border: none; border-radius: 999px; width: 52px; height: 52px; display: grid; place-items: center;
+      font-size: 1.4rem; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.16); z-index: 999;
+    }
+    .chatbot-window {
+      position: fixed; right: 1.4rem; bottom: 5.4rem; width: 310px; background: #fff; border-radius: 0.8rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; z-index: 999;
+    }
+    .chatbot-header {
+      background: var(--green); color: #fff; padding: 0.6rem 0.8rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;
+    }
+    .chatbot-body { padding: 0.5rem; max-height: 260px; overflow-y: auto; background: #f4f5f7; }
+    .chat-msg { background: #fff; padding: 0.4rem 0.6rem; border-radius: 0.5rem; font-size: 0.78rem; margin-bottom: 0.4rem; width: fit-content; max-width: 85%; }
+    .chat-msg.user { background: #dcfce7; margin-left: auto; }
+    .chatbot-input { display: flex; gap: 0.35rem; padding: 0.4rem; background: #fff; }
+    .chatbot-input input { flex: 1; border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; padding: 0.35rem 0.65rem; font-size: 0.7rem; }
+    .chatbot-input button { background: var(--green); border: none; color: #fff; border-radius: 999px; padding: 0.35rem 0.7rem; font-size: 0.7rem; cursor: pointer; }
+
+    @media (max-width: 768px) {
+      .hero-grid, .contact-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      section { padding: 3rem 0; }
+    }
+  </style>
 </head>
 <body>
-  <h1>GreenLine Landscaping</h1>
-  <p>Your landscaping website is ready!</p>
+  <header>
+    <div class="container nav">
+      <div class="logo">GreenLine Landscaping</div>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#seasons">Seasons</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="badge">Full-service, year-round landscaping</div>
+          <h1>Keep your property looking perfect in every season.</h1>
+          <p>From spring cleanups to summer mowing, fall leaf removal to winter snow management — we handle it all so you don’t have to.</p>
+          <a href="#contact" class="btn">Request a quote</a>
+          <a href="#calendar" class="btn btn-outline">Schedule a visit</a>
+        </div>
+        <div class="hero-card">
+          <h2>Popular this month</h2>
+          <ul>
+            <li>• Weekly lawn mowing & edging</li>
+            <li>• Mulch refresh & plant bed cleanup</li>
+            <li>• Irrigation inspection & fixes</li>
+            <li>• Seasonal fertilizer application</li>
+          </ul>
+          <p style="margin-top:0.6rem; font-size:0.7rem; color: #374151;">
+            Not sure what you need? Use the chat in the corner to tell us your property size and we’ll suggest a package.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-title">
+          <h2>Core Landscaping Services</h2>
+          <p style="color:#6b7280; font-size:0.8rem;">Everything homeowners & small businesses typically need.</p>
+        </div>
+        <div class="services-grid">
+          <div class="card">
+            <div class="tag">Weekly</div>
+            <h3>Lawn Mowing & Trimming</h3>
+            <p>Consistent cuts, clean edges, and debris removal.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Seasonal</div>
+            <h3>Mulch & Bed Maintenance</h3>
+            <p>Weeding, edging, and mulch refresh to keep beds sharp.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Irrigation</div>
+            <h3>Sprinkler Setup & Repair</h3>
+            <p>Startup, winterization, zoning, and leak fixes.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Design</div>
+            <h3>Planting & Small Installations</h3>
+            <p>New shrubs, perennials, and landscape accents.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Winter</div>
+            <h3>Snow & Ice Management</h3>
+            <p>Driveways, walkways, and commercial lots.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Add-on</div>
+            <h3>Aeration & Fertilizing</h3>
+            <p>Keep your lawn healthy and green all season.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="seasons">
+      <div class="container">
+        <div class="section-title">
+          <h2>Seasonal Service Packages</h2>
+          <p style="color:#6b7280; font-size:0.8rem;">Pick what matches your time of year.</p>
+        </div>
+        <div class="seasons-grid">
+          <div class="card">
+            <h3>Spring Refresh</h3>
+            <p>Debris cleanup, first mow, bed edging, mulch, fertilizer #1.</p>
+          </div>
+          <div class="card">
+            <h3>Summer Care</h3>
+            <p>Scheduled mowing, trimming, irrigation checks, weed control.</p>
+          </div>
+          <div class="card">
+            <h3>Fall Cleanup</h3>
+            <p>Leaf removal, gutters (optional), final mow, winter prep.</p>
+          </div>
+          <div class="card">
+            <h3>Winter Services</h3>
+            <p>Snow plowing, ice melt, shrub wrapping, irrigation blowout.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="container">
+        <div class="section-title">
+          <h2>Recent Work</h2>
+          <p style="color:#6b7280; font-size:0.8rem;">Before/after, lawn renovations, clean edge beds.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-item">Front yard refresh</div>
+          <div class="gallery-item">Mulch & border</div>
+          <div class="gallery-item">Commercial trim</div>
+          <div class="gallery-item">Backyard install</div>
+          <div class="gallery-item">Edging</div>
+          <div class="gallery-item">Snow service</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-title">
+          <h2>Why homeowners choose us</h2>
+          <p style="color:#6b7280; font-size:0.8rem;">Local, insured, and responsive.</p>
+        </div>
+        <div class="services-grid">
+          <div class="card">
+            <h3>Reliable schedules</h3>
+            <p>We show up on the day we say, and you can reschedule online.</p>
+          </div>
+          <div class="card">
+            <h3>Upfront pricing</h3>
+            <p>We give per-visit and seasonal package pricing.</p>
+          </div>
+          <div class="card">
+            <h3>Property-safe equipment</h3>
+            <p>Proper blades, no lawn rutting, driveway-friendly snow gear.</p>
+          </div>
+          <div class="card">
+            <h3>Easy communication</h3>
+            <p>Chatbot, contact form, and call-back scheduling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Get a Quote or Book a Visit</h2>
+          <p style="color:#6b7280; font-size:0.8rem;">Tell us your address and what you need — we’ll take it from there.</p>
+        </div>
+        <div class="contact-grid">
+          <form>
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your full name" required />
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
+            <label for="address">Property Address</label>
+            <input id="address" type="text" placeholder="Street, city" />
+            <label for="message">What do you need?</label>
+            <textarea id="message" rows="3" placeholder="e.g. Weekly mowing + spring cleanup"></textarea>
+            <button type="submit" class="btn" style="width:100%;">Send request</button>
+          </form>
+          <div class="calendar-box" id="calendar">
+            <h3 style="margin-bottom:0.5rem;">Schedule a walkthrough</h3>
+            <p style="font-size:0.75rem; color:#6b7280; margin-bottom:0.5rem;">Pick a day & time that works for you.</p>
+            <iframe src="https://calendar.google.com/calendar/u/0/r/week"></iframe>
+            <p style="font-size:0.65rem; color:#9ca3af; margin-top:0.5rem;">Tip: If the calendar doesn’t load here, we’ll send you a link.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> GreenLine Landscaping. All rights reserved.
+  </footer>
+
+  <button class="chatbot-toggle" aria-label="Chat with us">💬</button>
+  <div class="chatbot-window" id="chatbot">
+    <div class="chatbot-header">
+      <div>
+        <strong>GreenLine Chat</strong><br />
+        <span style="font-size:0.65rem; opacity:0.9;">Typical reply: under 1 business day</span>
+      </div>
+      <button id="closeChat" style="background:none; border:none; color:#fff; font-size:1rem; cursor:pointer;">×</button>
+    </div>
+    <div class="chatbot-body" id="chatBody">
+      <div class="chat-msg">Hi 👋 What kind of landscaping help do you need today?</div>
+      <div class="chat-msg">You can say things like “weekly mowing”, “spring cleanup”, or “snow removal”.</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" id="chatInput" placeholder="Type your message..." />
+      <button id="chatSend">Send</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener("click", function(e) {
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+    const toggleBtn = document.querySelector(".chatbot-toggle");
+    const chatbot = document.getElementById("chatbot");
+    const closeChat = document.getElementById("closeChat");
+    const chatBody = document.getElementById("chatBody");
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
+
+    toggleBtn.addEventListener("click", () => {
+      chatbot.style.display = chatbot.style.display === "flex" ? "none" : "flex";
+    });
+    closeChat.addEventListener("click", () => {
+      chatbot.style.display = "none";
+    });
+
+    function appendMessage(text, isUser = false) {
+      const msg = document.createElement("div");
+      msg.className = "chat-msg" + (isUser ? " user" : "");
+      msg.textContent = text;
+      chatBody.appendChild(msg);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function autoReply(userText) {
+      const text = userText.toLowerCase();
+      if (text.includes("mow") || text.includes("lawn")) {
+        appendMessage("We can do weekly or bi-weekly mowing. Drop your address in the contact form for a price.");
+      } else if (text.includes("spring")) {
+        appendMessage("Spring cleanup includes debris removal, first mow, edging, and mulch. Want that?");
+      } else if (text.includes("snow")) {
+        appendMessage("We offer per-push or monthly snow service. Tell us driveway size.");
+      } else {
+        appendMessage("Got it! If you tell me your city and service, we can schedule you in the calendar above.");
+      }
+    }
+
+    function sendChat() {
+      const val = chatInput.value.trim();
+      if (!val) return;
+      appendMessage(val, true);
+      chatInput.value = "";
+      setTimeout(() => autoReply(val), 450);
+    }
+
+    chatSend.addEventListener("click", sendChat);
+    chatInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") sendChat();
+    });
+  </script>
 </body>
 </html>
